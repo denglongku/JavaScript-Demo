@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>JS11-查找、替换、删除</title>
+<style>
+/*清除默认样式*/
+body,div,ul,p,li{padding:0; margin:0;}
+li{list-style:none;}
+/*包裹层*/
+#wrap{width:600px; height:500px; border:1px solid red; margin:10px; position:relative;}
+#text{width:400px; height:300px; margin:20px auto; background:#CCC; padding:5px; font-size:16px; line-height:26px;}
+#text span{background:#FF0;}
+
+#menu{position:absolute; top:20px; left:520px; width:60px; height:35px; line-height:35px; text-align:center; background:#999; cursor:pointer;}
+#submenu{position:absolute; top:55px; left:520px; display:none;}
+#submenu li{width:60px; height:35px; background:#ccc;line-height:35px; text-align:center; cursor:pointer; }
+
+#box{width:400px; height:120px; border:#333 1px solid; margin:0 auto; position:relative; display:none;}
+#box ul{width:355px; height:30px; border-bottom:2px solid #F93; padding-left:5px;}
+#box li{display:inline-block; width:80px; height:30px;  line-height:30px; text-align:center; background:#CCC; cursor:pointer;}
+#box img{width:10px; height:10px; position:absolute; top:5px; right:5px;}
+#search, #replace{ margin-left:5px; margin-top:20px; }
+#search{}
+#replace{}
+</style>
+
+<script>
+
+window.onload = function(){
+var oMenu = document.getElementById('menu');
+var oSubmenu = document.getElementById('submenu');
+var aLi1 = oSubmenu.getElementsByTagName('li');
+var oBox = document.getElementById('box');
+var oUl = oBox.getElementsByTagName('ul')[0];
+var aLi2 = oUl.getElementsByTagName('li');
+var aDiv = oBox.getElementsByTagName('div');
+var oOff = oBox.getElementsByTagName('img')[0];
+
+var oSearch = document.getElementById('search');
+var oReplace = document.getElementById('replace');
+var aInpS = oSearch.getElementsByTagName('input');
+var aInpR = oReplace.getElementsByTagName('input');
+var oText = document.getElementById('text');
+ 
+var onOff = true;
+
+//点击展开，显示替换&查找选项
+oMenu.onclick = function(){
+	if(onOff){
+	   oSubmenu.style.display = 'block';
+	   onOff = false;	
+	}else{
+	   oSubmenu.style.display = 'none';	
+	   onOff = true;
+	}
+}
+//替换&查找选项 鼠标 移入、移出、点击
+for(var i=0;i<aLi1.length;i++){
+	aLi1[i].index = i;
+   aLi1[i].onmouseover = function(){
+	   this.style.background = '#fc6';   
+   }
+   aLi1[i].onmouseout = function(){
+	   this.style.background = '#ccc';   
+   }
+   aLi1[i].onclick = function(){
+	   oBox.style.display = 'block';
+	   for(var i=0;i<aLi2.length;i++){
+	      aLi2[i].style.background = '#ccc';
+		  aDiv[i].style.display = 'none';
+	   }
+	   aLi2[this.index].style.background = '#fc6';
+	   aDiv[this.index].style.display = 'block';
+	   oSubmenu.style.display = 'none'; 
+	   onOff = true;  
+   }	
+}
+//点击叉叉 关闭查找&替换操作框
+oOff.onclick = function(){
+	oBox.style.display = 'none';
+}
+//点击操作框内的查找&替换 相互切换
+for(var i=0;i<aLi2.length;i++){
+	aLi2[i].index = i;
+	
+	aLi2[i].onclick = function(){
+		for(var i=0;i<aLi2.length;i++){
+	      aLi2[i].style.background = '#ccc';
+		  aDiv[i].style.display = 'none';
+	   }
+		this.style.background = '#fc6';
+		aDiv[this.index].style.display = 'block';
+	}
+}
+//查找-高亮
+var p = oText.innerHTML;
+aInpS[1].onclick = function(){
+   var str = aInpS[0].value;
+   if(str == ''){
+	   alert('请输入要查找的内容');
+   }else if(p.split(str) == p){
+	   alert('对不起，没有找到您输入的：【'+str+'】');}
+   oText.innerHTML = p.split(str).join('<span>'+str+'</span>');
+}
+//替换
+aInpR[2].onclick = function(){
+	var str = aInpR[0].value;
+	var newStr = aInpR[1].value;
+	if(str == ''){
+	   alert('请输入要替换的内容');
+   }else if(str !== '' && newStr == ''){
+	   if(confirm('您确定要删除：【'+str+'】吗？')){
+		 oText.innerHTML = p.split(str);  
+	   }else{
+		  oText.innerHTML = p; 
+	   }
+   }else{
+	  oText.innerHTML = p.split(str).join('<span>'+newStr+'</span>');  
+   }
+}
+}
+</script>
+</head>
+
+<body>
+<!--包裹层-->
+<div id="wrap">
+   <p id="text">专家组组长、北京市安全生产工程技术研究院常务副院长高建村，副组长、北京市安监局监管三处调研员闵军，北京化工大学专家高惠玲等专家组成员，石大实验室安全管理办公室成员参加了评估会议。
+评估会上，专家组传达了《北京市安监局关于开展北京地区高校实验室危险化学品风险评估工作的通知》的精神，介绍了本次评估工作的要求、内容、程序和督查重点，听取了学校实验室危险化学品管理工作汇报。科学技术处负责人就学校实验室危险化学品管理责任机制、基本设施、教育培训、管理制度、废弃物处置、应急预案等六方面内容进行了详细汇报，针对专家组就相关问题的询问作了解答。</p>
+   <div id="box">
+       <ul>
+       <li>查找</li>
+       <li>替换</li>
+       </ul>
+       <div id="search">
+           <input type="text" />
+           <input type="button" value='查找'/>
+       </div>
+       <div id='replace'>
+           <input type="text" />
+           <input type="text" />
+           <input type="button" value='替换'/>
+       </div>
+       <img src="img/shanchu.png" />
+   </div>
+   <p id="menu">展开</p>
+   <ul id="submenu">
+       <li>查找</li>
+       <li>替换</li>
+   </ul>
+</div>
+
+</body>
+</html>
