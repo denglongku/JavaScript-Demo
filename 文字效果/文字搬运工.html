@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>JS11-文字搬运工</title>
+<style>
+/*清除默认样式*/
+body,div,ul,p{padding:0; margin:0;}
+li{list-style:none;}
+
+#wrap{width:1000px; height:500px; border:1px solid red; margin:5px; position:relative;}
+textarea{position:absolute; top:5px; left:5px; border:1px dotted #666; background:#FFC;}
+.unread{position:absolute; top:5px; left: 600px; background:#9CF;}
+
+#box{width:100px;  position:absolute; top:5px; left:430px; }
+#box input{width:100px; height:50px; background:#F63; border:none; color:#fff; font-size:18px; font-weight:bold;}
+#box p{text-align:center; margin:10px 0;}
+#box ul{}
+#box li{width:10px; height:15px; background:#F99; float:left; margin-left:3px; }
+</style>
+
+<script>
+
+window.onload = function(){
+var oBtn = document.getElementById('btn');
+var oP = document.getElementById('num');
+var aSpan = oP.getElementsByTagName('span');
+var aText = document.getElementsByTagName('textarea');
+var oUl = document.getElementById('ul');
+var aLi = oUl.getElementsByTagName('li');
+
+var n = aText[0].value.length;
+oBtn.onclick = function(){
+   this.style.background ='#ccc';
+   aSpan[1].innerHTML = n;
+  
+   clearInterval(timer);
+   var i = 0;
+   var timer = setInterval(function(){
+	aText[1].innerHTML += aText[0].innerHTML.substring(0,1); 
+	aText[0].innerHTML = aText[0].innerHTML.slice(1);
+	   
+	   
+	   aSpan[0].innerHTML = aText[1].value.length;
+	  aLi[i].style.background = '#F99';
+	  i++;
+	  aLi[i].style.background = '#F3F';
+	  if(i >= aLi.length-1){
+		  i=0;
+		  aLi[i].style.background = '#F3F';}
+	  if(aSpan[0].innerHTML == n ){clearInterval(timer);}
+	  
+   },100)	
+}
+}
+</script>
+</head>
+
+<body>
+<!--包裹层-->
+<div id="wrap">
+     <textarea class='' rows='20' cols="40">中可容纳无限数量的文本，其中的文本的默认字体是等宽字体（通常是 Courier可以通过 cols 和 rows 属性来规定 textarea 的尺寸，不过更好的办法是使用 CSS 的 height 和 width 属性。
+    在文本输入区内的文本行间，用 "%OD%OA" （回车/换行）进行分隔；通过 标签的 wrap 属性设置文本输入区内的换行模式textarea 标签是成对出现的,以开始,以结束定义一个文本区域 (text-area) （一个多行的文本输入区域）。用户可在此文本区域中写文本。在一个文本区中，您可输入无限数量的文本。文本区中的默认字体是等宽字体 (fixed pitch)。</textarea>
+    
+    <textarea class='unread' rows='20' cols="40"></textarea> 
+    <div id="box">
+         <input id='btn' type="button" value="把文字右移" />
+         <p id="num"><span>0</span>/<span>0</span></p>
+         <ul id="ul">
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+         </ul>
+     </div>
+</div>
+
+</body>
+</html>
