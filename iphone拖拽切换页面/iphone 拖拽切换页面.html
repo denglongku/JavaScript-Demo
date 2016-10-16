@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>6-10 Iphone 弹性运动</title>
+<style>
+body,div,ul{margin:0; padding:0;}
+
+#iphone{background:url(img/bg.png); width:900px; height:600px;position:relative; left:200px;}
+
+#wrap{width:240px; height:361px; overflow:hidden;position:absolute; top:122px; left:325px;}
+
+#ul1{width:960px; position:absolute; top:0px; left:0px;}
+
+#ul1 li{list-style:none; width:240px; height:361px; float:left; cursor:pointer;}
+
+</style>
+
+   
+<script>
+window.onload = function(){
+	var oUl = document.getElementById('ul1');
+	var aLi = oUl.getElementsByTagName('li');
+	var disX = 0;
+	
+	var iNow = 0;
+	
+	var timer = null;
+	var speed = 0;
+	
+	//拖拽
+	oUl.onmousedown = function(ev){
+		var ev = ev || window.event;
+		disX = ev.clientX - oUl.offsetLeft;
+		
+		var downX = ev.clientX;
+		
+		//如果运动没结束就拖拽，需要清除运动
+		clearInterval(timer);
+		
+		document.onmousemove = function(ev){
+			var ev = ev || window.event;
+			oUl.style.left = ev.clientX - disX + 'px';
+		}
+		
+		document.onmouseup = function(ev){
+			document.onmousemove = null;
+			document.onmouseup = null;
+			
+			
+			//确定拖拽的方向
+			var ev = ev || window.event;
+			if(ev.clientX < downX){
+				if(iNow != aLi.length-1){
+				iNow++;
+				}
+				startMove( - iNow * aLi[0].offsetWidth);
+			}else{
+				if(iNow != 0){
+				iNow--;
+				}
+				startMove( - iNow * aLi[0].offsetWidth);
+				
+			}
+			
+			
+		}
+		return false;
+	}
+	
+	//封装函数，弹性运动
+	function startMove(target){
+		clearInterval(timer);
+		timer = setInterval(function(){
+			speed += (target - oUl.offsetLeft)/6;
+			speed *= 0.75;
+			
+			if(Math.abs(speed) <=1 && Math.abs(target - oUl.offsetLeft) <=1){
+				clearInterval(timer);
+				speed = 0;
+				oUl.style.left = target + 'px';
+				
+			}else{
+				oUl.style.left = oUl.offsetLeft + speed +'px';
+			}
+		},30);
+	}
+	
+}
+</script>
+
+
+
+</head>
+
+<body >
+
+<div id="iphone">
+    <div id="wrap">
+        <ul id="ul1">
+            <li style="background:url(img/pic1.png)" title="mv"></li>
+            <li style="background:url(img/pic2.png)" title="mv"></li>
+            <li style="background:url(img/pic3.png)" title="mv"></li>
+            <li style="background:url(img/pic4.png)" title="mv"></li>
+        </ul>
+    </div>
+</div>
+
+</body>
+</html>
