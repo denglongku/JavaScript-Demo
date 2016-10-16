@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>唯品会-多层菜单切换</title>
+    <style type="text/css">
+    body,ul,div,h2{padding:0; margin:0;}
+	li{list-style:none;}
+	
+	#wrap{width:786px; height:380px;border:1px solid #C09; margin:10px auto; position:relative;padding:5px;background:#e7e7e7;}
+	h2{width:100px; height:90px; line-height:90px; border:2px solid #d4d4d4; background:#e7e7e7; color:#e71052; text-align:center; font-weight:bold; cursor:pointer;}
+	 
+    ul{position:absolute; top:348px; left:109px; height:30px; width:683px; display:none; }
+	li{/*display:inline-block;*/float:left; height:30px; line-height:30px;background:#5a5a52; border-right:1px solid #fff; color:#fff; text-align:center; cursor:pointer;  }
+	
+	#img{display:inline-block;width:676px; height:342px;position:absolute; top:5px; left:112px;background:#fff;}
+	.activeh2{background:#fff; border-right-color:#fff;}
+	.activeul{display:block;}
+	.activeli{background:#e71052;}
+    </style>
+    
+    <script type="text/javascript">
+         
+    window.onload = function() {
+	   var oDiv = document.getElementById('wrap');
+	   var oImg = document.getElementById('img');
+	 
+	   var aH2 = oDiv.getElementsByTagName('h2');
+	   var aUl = oDiv.getElementsByTagName('ul');
+	   var aLi0 = aUl[0].getElementsByTagName('li');
+	   var aLi1 = aUl[1].getElementsByTagName('li');
+	   var aLi2 = aUl[2].getElementsByTagName('li');
+	   var aLi3 = aUl[3].getElementsByTagName('li');
+	   
+	   var arrUrl = [['img/1.jpg','img/2.jpg','img/3.jpg','img/4.jpg'],['img/11.jpg','img/22.jpg','img/33.jpg'],['img/111.jpg','img/222.png','img/333.jpg','img/444.jpg','img/555.png'],['img/1111.jpg','img/2222.jpg','img/3333.jpg','img/4444.jpg']];
+	   
+	   //初始化
+	   aH2[0].className = 'activeh2';
+	   aUl[0].className = 'activeul';
+	   aLi0[0].className = 'activeli';
+	   aLi1[0].className = 'activeli';
+	   aLi2[0].className = 'activeli';
+	   aLi3[0].className = 'activeli';
+	   oImg.src = arrUrl[0][0];
+	   
+	   //函数liwidth 动态设置li宽度 
+	   function liWidth(){
+		   for(var i=0;i<aUl.length;i++){
+			   var aLi = aUl[i].getElementsByTagName('li');
+			   var len = aLi.length;
+               for(var j=0;j<aLi.length;j++){
+				  aLi[j].style.width =parseInt((683-len)/len) +'px';
+		   }
+		   }}
+	   //调用函数
+	   liWidth();
+	   
+	   for(var i=0;i<aH2.length;i++){
+		  aH2[i].index = i;//索引值
+		  aH2[i].onmouseover = function(){//鼠标滑过H2
+			  for(var i=0;i<aH2.length;i++){
+			      aH2[i].className = ''; //先清空所有h2的效果
+			      aUl[i].style.display = 'none';//使所有ul隐藏
+			      this.className = 'activeh2'; //当前H2变背景色
+			      aUl[this.index].style.display = 'block';//显示对应的ul
+				  oImg.src = arrUrl[this.index][0];
+			  }
+			  var num = 0;
+			  var uldis = null;
+			  for(var j=0;j<aUl.length;j++){
+				  uldis = aUl[j].style.display;
+				  if(uldis == 'block'){//判断当前显示的ul
+				     num = j;//获取当前显示的ul[j]
+				     var aLi = aUl[j].getElementsByTagName('li');//声明当前显示的ul下的所有li
+				     var arrUrl1 = arrUrl[j];//获取当前显示的UL对应的图片数组
+					 
+				     for(var k=0;k<aLi.length;k++){
+						 aLi[k].index = k;//索引值
+						 aLi[k].onmouseover = function(){//鼠标移入Li
+							for(var l=0;l<aLi.length;l++){
+							    aLi[l].className = '';//先清空其他Li的效果
+							    this.className = 'activeli';//当前li变背景色
+							    oImg.src = arrUrl1[this.index]//相应变img
+							 }
+						 }
+					 }
+				 }
+			 }
+		}
+	}
+};
+    </script>
+ 
+</head>
+<body>
+  <div id='wrap'>
+      <h2 >最热团购</h2>
+          <ul >
+          <li >美宝莲</li>
+          <li>韩都衣舍</li>
+          <li>极有家</li>
+          <li>七格格</li>
+          </ul>
+      <h2>商城特惠</h2>
+          <ul >
+          <li>特色中国</li>
+          <li>晒单有奖</li>
+          <li>云南馆</li>
+          </ul>
+      <h2>名品推荐</h2>
+          <ul >
+          <li>Fossil</li>
+          <li>卡西欧</li>
+          <li>女士表</li>
+          <li>GoodLuck</li>
+          <li>CK</li>
+          </ul>
+     <h2>缤纷活动</h2>
+          <ul >
+          <li>sofa1</li>
+          <li>sofa2</li>
+          <li>sofa3</li>
+          <li>sofa4</li>
+          </ul>
+     <img id="img" src=""/> 
+  </div>
+</body>
+</html>
